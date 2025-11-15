@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>capa-server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .upload-area.dragover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .analyses-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .analysis-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .analysis-item:last-child {
+            border-bottom: none;
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.pending {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .message {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+        }
+
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+
+        .analysis-details {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            background: #64748b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .action-btn:hover {
+            background: #475569;
+        }
+
+        .action-btn.view {
+            background: #3b82f6;
+        }
+
+        .action-btn.view:hover {
+            background: #2563eb;
+        }
+
+        .action-btn.yara {
+            background: #10b981;
+        }
+
+        .action-btn.yara:hover {
+            background: #059669;
+        }
+
+        .action-btn.yara:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>capa-server</h1>
+        <p>Automated malware capability analysis</p>
+    </div>
+
+    <div class="container">
+        <div class="upload-section">
+            <h2 style="margin-bottom: 1.5rem;">Upload Binary for Analysis</h2>
+            <div id="message"></div>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <h3>Drop file here or click to browse</h3>
+                <p style="color: #64748b; margin-top: 0.5rem;">PE, ELF, .NET, shellcode, or sandbox reports (max 100MB)</p>
+                <input type="file" id="fileInput" accept="*">
+            </div>
+        </div>
+
+        <div class="analyses-section">
+            <h2 style="margin-bottom: 1.5rem;">Recent Analyses</h2>
+            <div id="analysesList">
+                <div class="loading">Loading analyses...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let yaraGenerationAvailable = false;
+
+        // Check if YARA generation is available
+        async function checkYaraAvailability() {
+            try {
+                const response = await fetch(`${API_BASE}/info`);
+                const data = await response.json();
+                yaraGenerationAvailable = data.yara_generation_available || false;
+            } catch (error) {
+                console.error('Failed to check YARA availability:', error);
+            }
+        }
+
+        // Upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const messageDiv = document.getElementById('message');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                uploadFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                uploadFile(e.target.files[0]);
+            }
+        });
+
+        async function uploadFile(file) {
+            showMessage('Uploading file...', 'success');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(`${API_BASE}/analyze`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(
+                        data.duplicate
+                            ? `File already analyzed (ID: ${data.analysis_id})`
+                            : `Analysis started (ID: ${data.analysis_id})`,
+                        'success'
+                    );
+                    fileInput.value = '';
+                    setTimeout(loadAnalyses, 1000);
+                } else {
+                    showMessage(`Error: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Upload failed: ${error.message}`, 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Load analyses
+        async function loadAnalyses() {
+            try {
+                const response = await fetch(`${API_BASE}/analyses?limit=50`);
+                const data = await response.json();
+
+                const listDiv = document.getElementById('analysesList');
+
+                if (data.analyses.length === 0) {
+                    listDiv.innerHTML = '<div class="loading">No analyses yet</div>';
+                    return;
+                }
+
+                listDiv.innerHTML = data.analyses.map(a => `
+                    <div class="analysis-item">
+                        <div>
+                            <div><strong>${a.filename}</strong></div>
+                            <div class="analysis-details">
+                                ${new Date(a.created_at).toLocaleString()} |
+                                ${(a.file_size / 1024).toFixed(2)} KB |
+                                Hash: ${a.file_hash.substring(0, 16)}...
+                                ${a.capabilities_count ? ` | ${a.capabilities_count} capabilities` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status ${a.status}">${a.status}</span>
+                            ${a.status === 'completed' ? `
+                                <button class="action-btn view" onclick="viewResults(${a.id})">View Results</button>
+                                <button class="action-btn" onclick="downloadResults(${a.id})">Download JSON</button>
+                                ${yaraGenerationAvailable ? `
+                                    <button class="action-btn yara" onclick="generateYara(${a.id})">Generate YARA</button>
+                                ` : ''}
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load analyses:', error);
+            }
+        }
+
+        async function viewResults(id) {
+            try {
+                const response = await fetch(`${API_BASE}/analyses/${id}`);
+                const data = await response.json();
+
+                // Store the analysis data in sessionStorage for the Explorer to load
+                sessionStorage.setItem('capaAnalysisData', JSON.stringify(data.results));
+                sessionStorage.setItem('capaAnalysisId', id);
+
+                // Open the Explorer in a new tab
+                window.open('/explorer', '_blank');
+            } catch (error) {
+                alert('Failed to load results: ' + error.message);
+            }
+        }
+
+        async function downloadResults(id) {
+            window.location.href = `${API_BASE}/analyses/${id}/download`;
+        }
+
+        async function generateYara(id) {
+            try {
+                // Open download URL directly - backend handles generation and download
+                window.location.href = `${API_BASE}/analyses/${id}/generate-yara?min_confidence=medium&min_capabilities=2`;
+                showMessage('Generating YARA rule...', 'success');
+            } catch (error) {
+                showMessage('Failed to generate YARA rule: ' + error.message, 'error');
+            }
+        }
+
+        // Initialize
+        async function init() {
+            await checkYaraAvailability();
+            await loadAnalyses();
+        }
+
+        // Auto-refresh analyses
+        init();
+        setInterval(loadAnalyses, 5000);
+    </script>
+</body>
+</html>

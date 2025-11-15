@@ -1,0 +1,19 @@
+# Web framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# Database
+sqlalchemy==2.0.36
+aiosqlite==0.20.0
+
+# Utilities
+pydantic==2.11.4
+pydantic-settings==2.7.1
+python-dateutil==2.9.0
+
+# Capa analysis (will be installed separately to get latest)
+# flare-capa (installed in Dockerfile)
+
+# HTTP client for health checks
+requests==2.32.3

@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  capa-server:
+    build:
+      context: ..  # Parent directory to access both capa-server and badsign
+      dockerfile: capa-server/Dockerfile
+      args:
+        # Build from capa repository
+        - CAPA_REPO=https://github.com/mandiant/capa.git
+    image: capa-server:latest
+    container_name: capa-server
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persist data - Use :Z for SELinux/Podman rootless
+      - ./data:/app/data:Z
+      # Optional: Mount custom rules
+      # - ./custom-rules:/app/custom-rules:Z
+    environment:
+      - CAPA_RULES_PATH=/app/rules
+      - DATABASE_PATH=/app/data/capa.db
+      - UPLOAD_DIR=/app/data/uploads
+      - RESULTS_DIR=/app/data/results
+      - MAX_FILE_SIZE_MB=100
+      - DEBUG=false
+    # Run as root inside container to avoid permission issues with rootless podman
+    # The container itself is still rootless from the host perspective
+    user: "0:0"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Security: Run as non-root user
+    # user: "1000:1000"
+    # Read-only root filesystem (requires tmpfs for tmp directories)
+    # read_only: true
+    # tmpfs:
+    #   - /tmp
+    #   - /app/data/uploads:mode=1777
