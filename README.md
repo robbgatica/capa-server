@@ -9,7 +9,7 @@ A containerized web service for automated malware capability analysis using [cap
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![Docker](https://img.shields.io/badge/container-Docker%20%7C%20Podman-blue)
 
-**[Quick Start](QUICKSTART.md)** | **[Usage Guide](USAGE.md)** | **[API Docs](http://localhost:8080/docs)** | **[Contributing](CONTRIBUTING.md)**
+**[Quick Start](docs/QUICKSTART.md)** | **[Usage Guide](docs/USAGE.md)** | **[API Docs](http://localhost:8080/docs)** | **[Contributing](docs/CONTRIBUTING.md)**
 
 ## Features
 
@@ -55,7 +55,7 @@ podman run -p 8080:8080 -v $(pwd)/data:/app/data:Z capa-server
 
 Note: Podman on SELinux systems (Fedora/RHEL) needs the `:Z` flag for volume mounts.
 
-See [PODMAN.md](PODMAN.md) for detailed Podman instructions.
+See [PODMAN.md](docs/PODMAN.md) for detailed Podman instructions.
 
 ## Architecture
 
@@ -306,7 +306,7 @@ This is designed for **internal lab use** or **isolated analysis environments**:
 - Internet-facing services
 - Multi-user environments
 
-See [NEXT_STEPS.md](NEXT_STEPS.md) for the roadmap.
+See [NEXT_STEPS.md](docs/NEXT_STEPS.md) for the roadmap.
 
 ## Standalone CLI Tools
 
@@ -324,32 +324,32 @@ badsign capa-to-yara analysis.json -o rule.yar
 badsign generate malware.exe --name "Malware" -o sigs.ndb
 ```
 
-**See [BADSIGN_CLI.md](BADSIGN_CLI.md)** for complete CLI documentation and standalone usage guide.
+**See [BADSIGN_CLI.md](docs/BADSIGN_CLI.md)** for complete CLI documentation and standalone usage guide.
 
 **Repository Location:** `/home/robb/tools/badsign/`
 
-**Want to use this separately?** See [SEPARATE_REPO_GUIDE.md](SEPARATE_REPO_GUIDE.md) for instructions on copying badsign to its own repository.
+**Want to use this separately?** See [SEPARATE_REPO_GUIDE.md](docs/SEPARATE_REPO_GUIDE.md) for instructions on copying badsign to its own repository.
 
 ## Documentation
 
- **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete navigation guide to all documentation
+ **[DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - Complete navigation guide to all documentation
 
 ### Getting Started
-- **[QUICKSTART.md](QUICKSTART.md)** - Get started in 5 minutes
-- **[USAGE.md](USAGE.md)** - Detailed usage guide
-- **[FEATURES_SUMMARY.md](FEATURES_SUMMARY.md)** - Complete feature reference
+- **[QUICKSTART.md](docs/QUICKSTART.md)** - Get started in 5 minutes
+- **[USAGE.md](docs/USAGE.md)** - Detailed usage guide
+- **[FEATURES_SUMMARY.md](docs/FEATURES_SUMMARY.md)** - Complete feature reference
 
 ### Signature Generation
-- **[BADSIGN_CLI.md](BADSIGN_CLI.md)** - Standalone CLI tools reference and complete command documentation
-- **[SEPARATE_REPO_GUIDE.md](SEPARATE_REPO_GUIDE.md)** - How to copy badsign to a separate repository
+- **[BADSIGN_CLI.md](docs/BADSIGN_CLI.md)** - Standalone CLI tools reference and complete command documentation
+- **[SEPARATE_REPO_GUIDE.md](docs/SEPARATE_REPO_GUIDE.md)** - How to copy badsign to a separate repository
 
 ### Maintenance
-- **[MAINTENANCE.md](MAINTENANCE.md)** - Repository cleanup, updates, and database migration
+- **[MAINTENANCE.md](docs/MAINTENANCE.md)** - Repository cleanup, updates, and database migration
 
 ### Development
-- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** - Architecture and design
-- **[NEXT_STEPS.md](NEXT_STEPS.md)** - Development roadmap
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
+- **[PROJECT_SUMMARY.md](docs/PROJECT_SUMMARY.md)** - Architecture and design
+- **[NEXT_STEPS.md](docs/NEXT_STEPS.md)** - Development roadmap
+- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - How to contribute
 
 ## Contributing
 

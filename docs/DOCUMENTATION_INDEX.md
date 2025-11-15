@@ -10,7 +10,7 @@ Last Updated: 2025-11-15
 
 | Document | Description | Lines | When to Read |
 |----------|-------------|-------|--------------|
-| [README.md](README.md) | **Main documentation** - Features, API reference, quick start | 363 | First read |
+| [README.md](../README.md) | **Main documentation** - Features, API reference, quick start | 363 | First read |
 | [QUICKSTART.md](QUICKSTART.md) | Get started in 5 minutes | 54 | Right after README |
 | [USAGE.md](USAGE.md) | Detailed usage instructions | 174 | When ready to use |
 | [FEATURES_SUMMARY.md](FEATURES_SUMMARY.md) | **Complete feature reference** - All capabilities explained | 461 | Reference guide |
@@ -53,7 +53,7 @@ Last Updated: 2025-11-15
 ##  Documentation by Use Case
 
 ### "I want to analyze malware"
-1. Read: [README.md](README.md) - Overview
+1. Read: [README.md](../README.md) - Overview
 2. Read: [QUICKSTART.md](QUICKSTART.md) - Setup
 3. Read: [USAGE.md](USAGE.md) - How to use
 4. Reference: [FEATURES_SUMMARY.md](FEATURES_SUMMARY.md) - All features
@@ -132,7 +132,7 @@ Largest files:
 ##  Reading Order Recommendations
 
 ### For End Users (Analysts)
-1. [README.md](README.md) - Overview
+1. [README.md](../README.md) - Overview
 2. [QUICKSTART.md](QUICKSTART.md) - Setup
 3. [USAGE.md](USAGE.md) - Usage
 4. [FEATURES_SUMMARY.md](FEATURES_SUMMARY.md) - Reference
@@ -143,7 +143,7 @@ Largest files:
 - [WORKFLOWS.md](WORKFLOWS.md) - Workflow examples
 
 ### For Tool Developers
-1. [README.md](README.md) - Overview
+1. [README.md](../README.md) - Overview
 2. [BADSIGN_CLI.md](BADSIGN_CLI.md) - CLI tools
 3. [SEPARATE_REPO_GUIDE.md](SEPARATE_REPO_GUIDE.md) - Standalone usage
 4. [BADSIGN_ANALYSIS.md](BADSIGN_ANALYSIS.md) - Implementation
@@ -210,7 +210,7 @@ When updating the project:
 
 ##  Still Can't Find What You Need?
 
-1. **Check the main README first:** [README.md](README.md)
+1. **Check the main README first:** [README.md](../README.md)
 2. **Search all docs:** `grep -r "your search" /home/robb/tools/capa-server/*.md`
 3. **Check API docs:** `http://localhost:8080/docs`
 4. **Look at examples:** [WORKFLOWS.md](WORKFLOWS.md)
@@ -222,6 +222,6 @@ When updating the project:
 
 ---
 
-**Documentation Home:** [README.md](README.md)
+**Documentation Home:** [README.md](../README.md)
 **Quick Start:** [QUICKSTART.md](QUICKSTART.md)
 **Complete Reference:** [FEATURES_SUMMARY.md](FEATURES_SUMMARY.md)
